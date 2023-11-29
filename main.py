@@ -78,7 +78,7 @@ Moves:\t'go {direction}' (travel north, south, east, or west)\n\
 
 def new_adventure(session, current_room):
     print("You have awoken! You hear in the far distance. Feeling disoriented, you stand and notice a small light approaching you.")
-    input("You feel calm. Suddenly you hear a voice in your head: 'What is your name?'\nPress any key to continue...")
+    input("You feel calm. Suddenly you hear a voice in your head: 'What is your name?'\nPress ENTER to continue...")
 
     player_name = input("Enter your character's name: ")
     player = Player(name=player_name)
@@ -132,7 +132,7 @@ def new_adventure(session, current_room):
         if random.randint(1, 10) <= 3:
             enemy_types = ['Goblin', 'Orc', 'Skeleton', 'Zombie']
             enemy = random.choice(enemy_types)
-            print(f"OH no! {enemy} appeared!")
+            print(f"OH no! a  {enemy} appeared!")
             input("Press enter to roll the dice...")
 
             while True:
