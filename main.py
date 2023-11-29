@@ -48,18 +48,33 @@ def initialize_database():
     Base.metadata.create_all(engine)
     return Session(engine)
 
+
+#MAIN MENU
+TITLE_ART = """
+···········································
+: _____ _    _   _ ____ _____     _______ :
+:| ____| |  | | | / ___|_ _\ \   / / ____|:
+:|  _| | |  | | | \___ \| | \ \ / /|  _|  :
+:| |___| |__| |_| |___) | |  \ V / | |___ :
+:|_____|_____\___/|____/___|  \_/  |_____|:
+···········································
+"""
+
 def main_menu():
-    print("\t\tMain Menu\n\n1. New Adventure\n2. Exit")
+    print(TITLE_ART)  
+    print("1. New Adventure\n2. Exit")
     choice = input("Enter your choice: ")
     return choice
 
 def prompt():
-    print("\t\tWelcome to my game\n\n\
+    print("\t\tElusive\n\n\
 You must collect all six items before fighting the boss.\n\n\
 Moves:\t'go {direction}' (travel north, south, east, or west)\n\
 \t'get {item}' (add nearby item to inventory)\n")
 
-    input("Press any key to continue...")
+    input("Press Enter to continue..")
+    
+    
 
 def new_adventure(session, current_room):
     print("You have awoken! You hear in the far distance. Feeling disoriented, you stand and notice a small light approaching you.")
@@ -70,7 +85,7 @@ def new_adventure(session, current_room):
 
     player.display_info()
     print("To gain your freedom, you must traverse the world and collect all six items before fighting the boss.")
-    input("Press any key to continue...")
+    input("Press Enter to continue..")
 
    
     player.inventory = []
@@ -102,23 +117,23 @@ def new_adventure(session, current_room):
                 print(f"You lost a fight with {rooms[current_room]['Boss']}.")
                 if current_room == 'Dojo':
                     print("You have not retrieved all six items and therefore are not worthy! DIE")
-                    input("Press any key to return to the Main Menu...")
-                    break  # Exit the inner loop and return to the Main Menu
+                    input("Press enter to return to the Main Menu...")
+                    break  
                 else:
                     break
             else:
                 print(f"You beat {rooms[current_room]['Boss']}!")
                 if current_room == 'Dojo':
-                    print("Congratulations! You have completed your adventure.")
-                    input("Press any key to exit the game...")
-                    exit()  # Exit the entire game
+                    print("Congratulations! You have defeated The shadow man and have gained your freedom for now.")
+                    input("Press enter to exit the game...")
+                    exit()  
                 break
 
         if random.randint(1, 10) <= 3:
             enemy_types = ['Goblin', 'Orc', 'Skeleton', 'Zombie']
             enemy = random.choice(enemy_types)
             print(f"OH no! {enemy} appeared!")
-            input("Press any key to roll the dice...")
+            input("Press enter to roll the dice...")
 
             while True:
                 player_roll = player.attack()
@@ -136,10 +151,10 @@ def new_adventure(session, current_room):
 
                     if player.health <= 0:
                         print("You have been defeated. Game over.")
-                        input("Press any key to return to the Main Menu...")
+                        input("Press enter to return to the Main Menu...")
                         exit()
 
-                    input("Press any key to roll the dice again...")
+                    input("Press enter to roll the dice again...")
 
         user_input = input("Enter your move:\n")
 
@@ -205,7 +220,7 @@ def main():
         if choice == '1':
             clear()
 
-            current_room = "Liminal Space"  # Initialize the current_room variable here
+            current_room = "Liminal Space"  
             new_adventure(session, current_room)
 
         elif choice == '2':
@@ -214,7 +229,7 @@ def main():
 
         else:
             print("Invalid choice. Please enter '1' for New Adventure or '2' to Exit.")
-            input("Press any key to continue...")
+            input("Press enter to continue...")
 
 if __name__ == "__main__":
     main()
