@@ -3,6 +3,9 @@ import random
 from PIL import Image
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship, Session
+import time
+import imageio
+
 
 img = Image.open('Map.png')
 img.show()
@@ -48,20 +51,69 @@ def initialize_database():
     Base.metadata.create_all(engine)
     return Session(engine)
 
-
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
 #MAIN MENU
-TITLE_ART = """
-···········································
-: _____ _    _   _ ____ _____     _______ :
-:| ____| |  | | | / ___|_ _\ \   / / ____|:
-:|  _| | |  | | | \___ \| | \ \ / /|  _|  :
-:| |___| |__| |_| |___) | |  \ V / | |___ :
-:|_____|_____\___/|____/___|  \_/  |_____|:
-···········································
+def convert_frame_to_ascii(frame):
+    
+    frame = frame.convert('L')
+
+    # Resize the frame 
+    width, height = frame.size
+    aspect_ratio = height / float(width)
+    new_width = 30  # Adjust the width as needed
+    new_height = int(aspect_ratio * new_width)
+    resized_frame = frame.resize((new_width, new_height))
+
+    # Define ASCII characters from dark to light
+    ascii_chars = "@%#*+=-:. "
+
+    ascii_frame = ""
+    for pixel_value in resized_frame.getdata():
+        index = min(pixel_value * len(ascii_chars) // 256, len(ascii_chars) - 1)
+        ascii_frame += ascii_chars[index]
+
+    # Reshape ASCII characters to match the resized frame
+    ascii_frame = "\n".join([ascii_frame[i:i+new_width] for i in range(0, len(ascii_frame), new_width)])
+
+    return ascii_frame
+
+
+# Path to your animated GIF
+gif_path = "Skull gif.gif"
+
+
+
+# Read the GIF frames
+gif_frames = imageio.get_reader(gif_path)
+
+# Display each frame of the animated GIF as ASCII art
+try:
+    for frame_number, frame_data in enumerate(gif_frames):
+        clear()
+        frame = Image.fromarray(frame_data)
+        ascii_frame = convert_frame_to_ascii(frame)
+        print(ascii_frame)
+        time.sleep(0.1)  
+except KeyboardInterrupt:
+    pass
+
+TITLE_SCREEN_FRAME = """
+*********************************
+* _____ _           _           *
+*| ____| |_   _ ___(_)_   _____ *
+*|  _| | | | | / __| \ \ / / _ \*
+*| |___| | |_| \__ \ |\ V /  __/*
+*|_____|_|\__,_|___/_| \_/ \___|*
+*********************************
 """
 
+
+
+# static title screen
+
 def main_menu():
-    print(TITLE_ART)  
+    print(TITLE_SCREEN_FRAME)  
     print("1. New Adventure\n2. Exit")
     choice = input("Enter your choice: ")
     return choice
@@ -196,8 +248,7 @@ def new_adventure(session, current_room):
         else:
             msg = "Invalid command"
 
-def clear():
-    os.system('cls' if os.name == 'nt' else 'clear')
+
 
 rooms = {
     'Liminal Space': {'North': 'Mirror Maze', 'South': 'Bat Cavern', 'East': 'Bazaar'},
